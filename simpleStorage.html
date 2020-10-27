@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Storage</title>
+	<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+	<script type="text/javascript">
+		const contract_address = "0x80aec1d099A6038Cd0169625A0C6e8c2e46b68a5";
+
+		const contract_abi = [
+			{
+				"inputs": [],
+				"name": "get",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					}
+				],
+				"name": "set",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		];
+
+		const ethEnabled = () => {
+		  if (window.ethereum) {
+		    window.web3 = new Web3(window.ethereum);
+		    window.ethereum.enable();
+		    return true;
+		  }
+		  return false;
+		}
+
+		async function saveCoinbase () {
+		  window.coinbase = await window.web3.eth.getCoinbase();
+		};
+
+		async function getAndShowVal () {
+		  var val = window.SimpleStorage.methods.get().call();
+			document.getElementById("storedData").value = await val;
+		};
+
+		async function setVal () {
+			var val = document.getElementById("storedData").value;
+		  window.SimpleStorage.methods.set(val).send(val, {from:window.coinbase});
+		}
+
+		if (!ethEnabled()) {
+		  alert("Metamask or browser with Ethereum not detected!");
+		}
+		else {
+			window.SimpleStorage = new web3.eth.Contract(contract_abi, contract_address);
+			saveCoinbase();
+		}
+
+	</script>
+</head>
+<body>
+	<button id="getme" onclick="getAndShowVal()">Get</button>
+	StoredData: <input type="text" name="storedData" id="storedData">
+	<button id="setme" onclick="setVal()">Set</button>
+</body>
+</html>
