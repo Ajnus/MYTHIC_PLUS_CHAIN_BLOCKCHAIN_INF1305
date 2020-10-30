@@ -136,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
           30.heightBox,
           SliderWidget(
             min: 0,
-            max: 100, /*finalVal: (value){myAMount = (value*100).round}
+            max: 100, /*finalVal: (value){myAMount = (value*100).round}*/
           ).centered(),
           HStack(
             [
