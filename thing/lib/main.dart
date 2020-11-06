@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Thing',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int myAmount = 0;
   var myData;
   final myAddress = "0x980CBd8423BfcB7503703090e5500edA35C305b1";
+  String txHash;
   bool data = false;
 
   @override
@@ -50,11 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
         "https://kovan.infura.io/v3/949e7a9ae944419f92c8e9096f1f3454",
         httpClient);
     getBalance(myAddress);
+
+    
   }
 
   Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0xd0a919CB1e50c2d4512f797499bc6291dcC4582c";
+    String contractAddress = "0x53f116D8F9f4bc649A49e12e9b66bA5c926FE1b6";
 
     final contract = DeployedContract(ContractAbi.fromJson(abi, "Thing"),
         EthereumAddress.fromHex(contractAddress));
@@ -85,6 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var response = await submit("depositBalance", [bigAmount]);
 
     print("Deposited");
+    txHash = response;
+    setState(() {});
     return response;
   }
 
@@ -93,15 +98,22 @@ class _MyHomePageState extends State<MyHomePage> {
     var response = await submit("withdrawBalance", [bigAmount]);
 
     print("Withdraw");
+    txHash = response;
+    setState(() {});
     return response;
   }
 
-  Future<String> submit(String functionName, List<dynamic> args) async{
-    EthPrivateKey credentials = EthPrivateKey.fromHex("0x875adca609077681a6ec760ee789fdba7b92eeb73c6da0fa46e1806aaf717367");
+  Future<String> submit(String functionName, List<dynamic> args) async {
+    EthPrivateKey credentials = EthPrivateKey.fromHex(
+        "875adca609077681a6ec760ee789fdba7b92eeb73c6da0fa46e1806aaf717367");
 
     DeployedContract contract = await loadContract();
     final ethFunction = contract.function(functionName);
-    final result = await ethClient.sendTransaction(credentials, Transaction.callContract(contract: contract, function: ethFunction, parameters: args), fetchChainIdFromNetworkId: true);
+    final result = await ethClient.sendTransaction(
+        credentials,
+        Transaction.callContract(
+            contract: contract, function: ethFunction, parameters: args),
+        fetchChainIdFromNetworkId: true);
     return result;
   }
 
@@ -111,16 +123,40 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Vx.gray300,
       body: ZStack([
         VxBox()
-            .blue600
-            .size(context.screenWidth, context.percentHeight * 30)
+            .black
+            .size(context.screenWidth, context.percentHeight * 45)
             .make(),
         VStack([
           (context.percentHeight * 10).heightBox,
-          "\$THING".text.xl4.white.bold.center.makeCentered().py16(),
-          (context.percentHeight * 5).heightBox,
+          Center(child: Image.asset('assets/images/Webp.net-resizeimage2.png')),
+          "MYTHIC+ CHAIN"
+              .text
+              .fontFamily('LifeCraft')
+              .xl5
+              .yellow400
+              .center
+              .makeCentered()
+              .py12(),
+          Center(
+              child: Image.asset(
+                  'assets/images/Webp.net-resizeimage2_-_Copia-removebg-preview.png')),
+          "\nWorld of Warcraft blockchain WTS\n"
+              .text
+              .xl2
+              .gray400
+              .bold
+              .center
+              .makeCentered()
+              .py12(),
+          (context.percentHeight * 1).heightBox,
           VxBox(
                   child: VStack([
-            "Balance".text.gray700.xl2.semiBold.makeCentered(),
+            "(Not Republic Credits) Balance"
+                .text
+                .gray700
+                .xl2
+                .semiBold
+                .makeCentered(),
             10.heightBox,
             data
                 ? "\$$myData".text.bold.xl6.makeCentered().shimmer()
@@ -135,9 +171,12 @@ class _MyHomePageState extends State<MyHomePage> {
               .p16(),
           30.heightBox,
           SliderWidget(
-            min: 0,
-            max: 100, /*finalVal: (value){myAMount = (value*100).round}*/
-          ).centered(),
+              min: 0,
+              max: 100,
+              finalVal: (value) {
+                myAmount = (value * 100).round();
+                print(myAmount);
+              }).centered(),
           HStack(
             [
               FlatButton.icon(
@@ -164,7 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
             alignment: MainAxisAlignment.spaceAround,
             axisSize: MainAxisSize.max,
-          ).p16()
+          ).p16(),
+          if (txHash != null) txHash.text.black.makeCentered().p16()
         ])
       ]),
     );
