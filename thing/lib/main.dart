@@ -52,8 +52,38 @@ class _MyHomePageState extends State<MyHomePage> {
         httpClient);
     getBalance(myAddress);
 
-    
+    showOverlay2(context);
+    showOverlay2(context);
+    showOverlay3(context);
+    showOverlay3(context);
   }
+
+  showOverlay2(BuildContext context) async {
+    OverlayState overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry = OverlayEntry(
+        builder: (context) => Positioned(
+            top: MediaQuery.of(context).size.height / 2.0  - 85.0,
+            right: 0.0,
+            child: Image.asset('assets/images/mythicStone4.png')));
+
+    overlayState.insert(overlayEntry);
+  }
+
+  showOverlay3(BuildContext context) async {
+    OverlayState overlayState = Overlay.of(context);
+
+  OverlayEntry overlayEntry = OverlayEntry(
+        builder: (context) => Positioned(
+            top: MediaQuery.of(context).size.height / 2.0  - 85.0,
+            left: 0.0,
+            child: Image.asset('assets/images/mythicStone4.png')));
+            
+    overlayState.insert(overlayEntry);
+  }
+
+
+
+    
 
   Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/abi.json");
