@@ -1,45 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:thing/src/login0.dart';
-import 'src/models/appstate.dart';
-import 'src/slider_widget.dart';
+import 'models/appstate.dart';
+import 'slider_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart';
-import 'src/login.dart';
-import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Thing',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Thing'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
   Client httpClient;
   Web3Client ethClient;
   int myAmount = 0;
@@ -48,21 +25,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String txHash;
   bool data = false;
 
-  static AudioCache player2 = new AudioCache();
-  static const login = "music/ready_check.mp3";
-  
-
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    /*httpClient = Client();
+    httpClient = Client();
     ethClient = Web3Client(
         "https://kovan.infura.io/v3/949e7a9ae944419f92c8e9096f1f3454",
         httpClient);
-    getBalance(myAddress);*/
+    getBalance(myAddress);
 
     showOverlay2(context);
     showOverlay2(context);
@@ -93,9 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
     overlayState.insert(overlayEntry);
   }
 
-  /*Future<DeployedContract> loadContract() async {
+  Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0x99CF4c4CAE3bA61754Abd22A8de7e8c7ba3C196d";
+    String contractAddress = "0x48846CE39DCaFcd4d53Cb5a00399f1773E244D59";
 
     final contract = DeployedContract(ContractAbi.fromJson(abi, "Thing"),
         EthereumAddress.fromHex(contractAddress));
@@ -153,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
             contract: contract, function: ethFunction, parameters: args),
         fetchChainIdFromNetworkId: true);
     return result;
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,107 +160,9 @@ class _MyHomePageState extends State<MyHomePage> {
               .makeCentered()
               .py12(),
           (context.percentHeight * 1).heightBox,
-        ]),
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(200),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    labelText: 'Mythic ID',
-                    labelStyle: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: TextField(
-                  obscureText: true,
-                  style: TextStyle(color: Colors.white),
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    //border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-                    disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    labelText: 'Password',
-                    labelStyle: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              FlatButton(
-                onPressed: () {
-                  //forgot password screen
-                },
-                textColor: Colors.white,
-                child: Text('Forgot Password'),
-              ),
-              Container(
-                  height: 50,
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: RaisedButton(
-                    textColor: Colors.white,
-                    color: Colors.blue,
-                    child: Text('LOGIN'),
-                    onPressed: () {
-                      print(nameController.text);
-                      print(passwordController.text);
-                      //AppState.login;
-                      player2.play(login);
-                      Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login0Page()));
-                    },
-                  )),
-              Container(
-                  child: Row(
-                children: <Widget>[
-                  Text('Does not have account?'),
-                  FlatButton(
-                    textColor: Colors.white,
-                    child: Text(
-                      'Sign in',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      //signup screen
-                    },
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
-              ))
-            ],
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
-/*VxBox(
+          VxBox(
                   child: VStack([
-            "(Not Republic Credits) Balance"
+            "Credits Balance"
                 .text
                 .gray700
                 .xl2
@@ -340,4 +215,9 @@ class _MyHomePageState extends State<MyHomePage> {
             alignment: MainAxisAlignment.spaceAround,
             axisSize: MainAxisSize.max,
           ).p16(),
-          if (txHash != null) txHash.text.black.makeCentered().p16() */
+          if (txHash != null) txHash.text.black.makeCentered().p16()
+        ])
+      ]),
+    );
+  }
+}

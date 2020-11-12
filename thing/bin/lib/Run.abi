@@ -24,31 +24,6 @@
 				"components": [
 					{
 						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address payable",
-						"name": "addr",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "nickname",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "guild",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "server",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
 						"name": "custo",
 						"type": "uint256"
 					},
@@ -58,8 +33,8 @@
 						"type": "string"
 					}
 				],
-				"internalType": "struct Run.Player",
-				"name": "_contratado",
+				"internalType": "struct Run.Corrida",
+				"name": "_corrida",
 				"type": "tuple"
 			}
 		],
@@ -77,22 +52,7 @@
 			},
 			{
 				"internalType": "string",
-				"name": "_guild",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
 				"name": "_server",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_custo",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_masmorra",
 				"type": "string"
 			}
 		],
@@ -127,24 +87,9 @@
 				"type": "string"
 			},
 			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
 			}
 		],
 		"stateMutability": "view",
