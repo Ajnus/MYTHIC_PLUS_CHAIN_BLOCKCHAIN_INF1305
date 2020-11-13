@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:audioplayers/audio_cache.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'login.dart';
@@ -6,6 +10,7 @@ import 'slider_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart';
+import 'package:tuple/tuple.dart';
 
 class Login1Page extends StatefulWidget {
   Login1Page({Key key, this.title}) : super(key: key);
@@ -20,17 +25,25 @@ class _Login1PageState extends State<Login1Page> {
   Client httpClient;
   Web3Client ethClient;
   int myAmount = 0;
-  var playerNome;
-  var playerServer;
+  String playerNome;
+  String playerGuild;
+  String playerServer;
   var playerAddress;
-  var playerCusto;
-  var playerMasmorra;
+  int playerCusto;
+  String playerMasmorra;
   final myAddress = "0x980CBd8423BfcB7503703090e5500edA35C305b1";
   String txHash;
-  bool data = false;
+  //bool data = false;
+  String valorCasa;
+  String valorPlayer;
+  String troco;
+  int contratado;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  static AudioCache player2 = new AudioCache();
+  static const chaChing = "music/Cash Register Cha-Ching _ Sound Effect.mp3";
 
   @override
   void initState() {
@@ -72,7 +85,7 @@ class _Login1PageState extends State<Login1Page> {
 
   Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0xf94c34fd3C462c342749893203682504b3114cCc";
+    String contractAddress = "0x3f46e85df9A0DcB396f0f3437Ef092dC18232964";
 
     final contract = DeployedContract(ContractAbi.fromJson(abi, "Run"),
         EthereumAddress.fromHex(contractAddress));
@@ -94,22 +107,33 @@ class _Login1PageState extends State<Login1Page> {
     List<dynamic> result = await query("get", [(BigInt.from(id))]);
 
     playerNome = result[0];
-    playerServer = result[1];
-    playerAddress = result[2];
-    playerCusto = result[3];
-    playerMasmorra =result[4];
+    playerGuild = result[1];
+    playerServer = result[2];
+    playerAddress = result[3];
+    playerCusto = int.parse(result[4].toString());
+    playerMasmorra = result[5];
     //data = true;
     setState(() {});
   }
 
-  Future<String> sendCoin() async {
-    var bigAmount = BigInt.from(myAmount);
-    var response = await submit("depositBalance", [bigAmount]);
+  Future<void> sendMoney(String targetAddress, int id) async {
+    EthereumAddress address = EthereumAddress.fromHex(targetAddress);
+    //var contratadoID = BigInt.from(id);
+    //dynamic idd = id;
+    //idd = BigInt.from(id);
+    final result = await submit("sendMoney", [(BigInt.from(id))]);
+    List<dynamic> resultQ = await query("postSendMoney", []);
 
     print("Deposited");
-    txHash = response;
+    valorCasa = resultQ[0].toString();
+    valorPlayer = resultQ[1].toString();
+    troco = resultQ[2].toString();
+    txHash = result;
+    contratado = 1;
+    //data = true;
+    //return response;
+
     setState(() {});
-    return response;
   }
 
   Future<String> withDrawCoin() async {
@@ -131,9 +155,40 @@ class _Login1PageState extends State<Login1Page> {
     final result = await ethClient.sendTransaction(
         credentials,
         Transaction.callContract(
-            contract: contract, function: ethFunction, parameters: args),
+            value: EtherAmount.inWei(BigInt.from(playerCusto)),
+            contract: contract,
+            function: ethFunction,
+            parameters: args),
         fetchChainIdFromNetworkId: true);
     return result;
+  }
+
+  Future<Tuple2<List<dynamic>, String>> submitQuery(
+      EthereumAddress address, String functionName, List<dynamic> args) async {
+    EthPrivateKey credentials = EthPrivateKey.fromHex(
+        "875adca609077681a6ec760ee789fdba7b92eeb73c6da0fa46e1806aaf717367");
+
+    DeployedContract contract = await loadContract();
+    final ethFunction = contract.function(functionName);
+    final result = await ethClient.sendTransaction(
+        credentials,
+        Transaction.callContract(
+            from: address,
+            value: EtherAmount.inWei(BigInt.from(playerCusto)),
+            contract: contract,
+            function: ethFunction,
+            parameters: args),
+        fetchChainIdFromNetworkId: true);
+
+    final resultQ = await ethClient.call(
+        sender: address,
+        contract: contract,
+        function: ethFunction,
+        params: args);
+
+    final resultF = Tuple2<List<dynamic>, String>(resultQ, result);
+
+    return resultF;
   }
 
   @override
@@ -166,22 +221,46 @@ class _Login1PageState extends State<Login1Page> {
               .bold
               .center
               .makeCentered()
-          //.py12()
-          ,
+              .py12(),
           //(context.percentHeight * 1).heightBox,
-          "\n A ser contratado: $playerNome".text.fontFamily('Inconsolata').xl.gray400.bold.center.make()
-          //.py12()
-          ,
-          //(context.percentHeight * 1).heightBox,
-          "\n Servidor: $playerServer".text.fontFamily('Inconsolata').xl.gray400.bold.center.make()
-          //.py1()
-          ,
-          //(context.percentHeight * 1).heightBox,
-          " Seu endereço: \n $playerAddress"
+          "\n A ser contratado: $playerNome"
               .text
               .fontFamily('Inconsolata')
               .xl
-              .gray400
+              .white
+              .bold
+              .center
+              .make()
+          //.py12()
+          ,
+          //(context.percentHeight * 1).heightBox,
+          "\n Guilda: $playerGuild"
+              .text
+              .fontFamily('Inconsolata')
+              .xl
+              .white
+              .bold
+              .center
+              .make()
+          //.py12()
+          ,
+          //(context.percentHeight * 1).heightBox,
+          "\n Servidor: $playerServer"
+              .text
+              .fontFamily('Inconsolata')
+              .xl
+              .white
+              .bold
+              .center
+              .make()
+          //.py1()
+          ,
+          //(context.percentHeight * 1).heightBox,
+          " Endereço da carteira: \n $playerAddress"
+              .text
+              .fontFamily('Inconsolata')
+              .xl
+              .white
               .bold
               .make()
               .py12(),
@@ -190,7 +269,7 @@ class _Login1PageState extends State<Login1Page> {
               .text
               .fontFamily('Inconsolata')
               .xl
-              .gray400
+              .white
               .bold
               .center
               .make()
@@ -205,11 +284,37 @@ class _Login1PageState extends State<Login1Page> {
                 child: Text('CONTRATAR'),
                 onPressed: () {
                   //getPlayer(myAddress, 4);
-                  Navigator.pop(context);
+                  player2.play(chaChing);
+
+                  sendMoney(myAddress, 4);
+                  print('passou');
+
+                  /*Navigator.pop(context);
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+                      MaterialPageRoute(builder: (context) => LoginPage()));*/
                 },
               ))),
+          if (txHash != null)
+            "Taxa de transação: $valorCasa wei, valor transferido: $valorPlayer wei, troco: $troco wei. transação:"
+                .text
+                .fontFamily('Inconsolata')
+                .xl
+                .white
+                .bold
+                .center
+                .make()
+                .py12(),
+          if (txHash != null)
+            SelectableText("$txHash",
+                showCursor: true,
+                autofocus: true,
+                dragStartBehavior: DragStartBehavior.start,
+                textScaleFactor: 1.25,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: 'Inconsolata',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
         ])
       ]),
     );

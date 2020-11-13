@@ -21,50 +21,29 @@
 	{
 		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address payable",
-						"name": "addr",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "nickname",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "guild",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "server",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "custo",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "masmorra",
-						"type": "string"
-					}
-				],
-				"internalType": "struct Run.Player",
-				"name": "_contratado",
-				"type": "tuple"
+				"internalType": "uint256",
+				"name": "_contratadoID",
+				"type": "uint256"
 			}
 		],
 		"name": "sendMoney",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "payable",
 		"type": "function"
 	},
@@ -158,6 +137,29 @@
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "postSendMoney",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

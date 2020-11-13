@@ -20,8 +20,9 @@ class _Login0PageState extends State<Login0Page> {
   Client httpClient;
   Web3Client ethClient;
   int myAmount = 0;
-  var playerNome;
-  var playerServer;
+  String playerNome;
+  String playerGuild;
+  String playerServer;
   var playerAddress;
   var playerCusto;
   String playerMasmorra;
@@ -72,7 +73,7 @@ class _Login0PageState extends State<Login0Page> {
 
   Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0xf94c34fd3C462c342749893203682504b3114cCc";
+    String contractAddress = "0x3f46e85df9A0DcB396f0f3437Ef092dC18232964";
 
     final contract = DeployedContract(ContractAbi.fromJson(abi, "Run"),
         EthereumAddress.fromHex(contractAddress));
@@ -94,11 +95,12 @@ class _Login0PageState extends State<Login0Page> {
     List<dynamic> result = await query("get", [(BigInt.from(id))]);
 
     playerNome = result[0];
-    playerServer = result[1];
-    playerAddress = result[2];
-    playerCusto = result[3];
-    playerMasmorra =result[4];
-    //data = true;
+    playerGuild = result[1];
+    playerServer = result[2];
+    playerAddress = result[3];
+    playerCusto = result[4];
+    playerMasmorra = result[5];
+    data = true;
     setState(() {});
   }
 
@@ -139,6 +141,7 @@ class _Login0PageState extends State<Login0Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Vx.red900,
       body: ZStack([
         VxBox()
@@ -166,14 +169,39 @@ class _Login0PageState extends State<Login0Page> {
               .bold
               .center
               .makeCentered()
+              .py12(),
+          (context.percentHeight * 1).heightBox,
+
+          " Bem-vindo $playerNome!"
+              .text
+              .fontFamily('Inconsolata')
+              .xl
+              .white
+              .bold
+              .center
+              .make()
           //.py12()
           ,
           //(context.percentHeight * 1).heightBox,
-          "\n Bem-vindo $playerNome!".text.fontFamily('Inconsolata').xl.gray400.bold.center.make()
+          "\n Guilda: $playerGuild"
+              .text
+              .fontFamily('Inconsolata')
+              .xl
+              .white
+              .bold
+              .center
+              .make()
           //.py12()
           ,
           //(context.percentHeight * 1).heightBox,
-          "\n Servidor: $playerServer".text.fontFamily('Inconsolata').xl.gray400.bold.center.make()
+          "\n Servidor: $playerServer"
+              .text
+              .fontFamily('Inconsolata')
+              .xl
+              .white
+              .bold
+              .center
+              .make()
           //.py1()
           ,
           //(context.percentHeight * 1).heightBox,
@@ -181,7 +209,7 @@ class _Login0PageState extends State<Login0Page> {
               .text
               .fontFamily('Inconsolata')
               .xl
-              .gray400
+              .white
               .bold
               //.center
               .make()
@@ -191,45 +219,63 @@ class _Login0PageState extends State<Login0Page> {
               .text
               .fontFamily('Inconsolata')
               .xl
-              .gray400
+              .white
               .bold
               .center
               .make()
               .py12(),
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            child: TextField(
-              style: TextStyle(color: Colors.white),
-              controller: nameController,
-              decoration: InputDecoration(
-                disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                labelText: 'Mythic ID',
-                labelStyle: TextStyle(color: Colors.white),
+        ]),
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(275),
               ),
-            ),
-          ),
-          Container(
-              height: 50,
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: RaisedButton(
-                textColor: Colors.white,
-                color: Colors.blue,
-                child: Text('BUSCAR'),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: TextField(
+                  //scrollController: ,
+                  style: TextStyle(color: Colors.white),
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    labelText: 'Mythic ID',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              FlatButton(
                 onPressed: () {
-                  //getPlayer(myAddress, 4);
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login1Page()));
+                  
                 },
-              )),
-        ])
+                child: Text(''),
+              ),
+              Container(
+                height: 50,
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: RaisedButton(
+                  textColor: Colors.white,
+                  color: Colors.blue,
+                  child: Text('BUSCAR'),
+                  onPressed: () {
+                    //getPlayer(myAddress, 4);
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login1Page()));
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
       ]),
     );
   }

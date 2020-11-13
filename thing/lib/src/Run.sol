@@ -19,13 +19,18 @@ contract Run
 
     Player[] players; // implementar estrutura mais capaz
     
+    uint valorCasa;
+    uint valorPlayer;
+    uint troco;
+    
 
     constructor() public
     {
         dono = msg.sender;
     }
 
-    function set(string memory _nickname, string memory _guild, string  memory _server, uint _custo, string memory _masmorra) public
+    function set(string memory _nickname, string memory _guild, string  memory _server, uint _custo,
+				 string memory _masmorra) public
 	{
 		players.push(Player(
 		{
@@ -40,7 +45,8 @@ contract Run
 		));
 	}
 	
-	function get(uint id) public view returns (string memory, string memory, string memory, address, uint, string memory)
+	function get(uint id) public view returns (string memory, string memory, string memory, address, 
+											   uint, string memory)
     {
         return (players[id-1].nickname, 
 				players[id-1].guild, 
@@ -63,31 +69,40 @@ contract Run
 
 	modifier excetoDono()
 	{
-		require(msg.sender == dono, "O dono do contrato nao pode fazer isso");
+		require(msg.sender != dono, "O dono do contrato nao pode fazer isso");
 		_;
 	}
 
     event TrocoEnviado(address pagador, uint troco);
 
-    function sendMoney (Player memory _contratado) payable public excetoDono() 
+    function sendMoney (uint _contratadoID) payable public /*excetoDono()*/ returns (uint, uint, uint)
 	{
-		require(msg.value >= _contratado.custo, "O valor de deposito é insuficiente.");
-
-		dono.transfer(msg.value/100);           		// % da casa
- 		uint valor = msg.value * 99 /100;	    		// valor transferido
-		_contratado.addr.transfer(valor);
-
-		// calcula e envia troco
-		uint troco = msg.value - _contratado.custo;
+		require(msg.value >= players[_contratadoID-1].custo, "O valor de deposito é insuficiente.");
+		
+		// se houver, calcula e envia troco
+		troco = msg.value - players[_contratadoID-1].custo;
 		if(troco > 0)
 		{
-		msg.sender.transfer(troco);
+		msg.sender.send(troco);
 		emit TrocoEnviado(msg.sender, troco);
 	    }
+
+		valorCasa = players[_contratadoID-1].custo/100;      		     		// % da casa
+ 		valorPlayer = players[_contratadoID-1].custo - valorCasa;	    		// valor transferido
+		dono.send(valorCasa);
+		players[_contratadoID-1].addr.send(valorPlayer);
+
+	
 
 	// registra a corrida
 	//corridas[msg.sender] = corrida;
 	//corridas.push(msg.sender);
 	//emit CorridaRegistrada(msg.sender, );
 	}
+	
+	function postSendMoney() public view returns (uint, uint, uint)
+	{
+	   	return (valorCasa, valorPlayer, troco);
+	}
+	
 }

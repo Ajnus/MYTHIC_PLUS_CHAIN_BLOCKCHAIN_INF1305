@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0x48846CE39DCaFcd4d53Cb5a00399f1773E244D59";
+    String contractAddress = "0xf6EEb17B0502646213032d3156ECb1c788ce12E9";
 
     final contract = DeployedContract(ContractAbi.fromJson(abi, "Thing"),
         EthereumAddress.fromHex(contractAddress));

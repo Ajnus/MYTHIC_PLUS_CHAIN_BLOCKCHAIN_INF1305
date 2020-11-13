@@ -50,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static AudioCache player2 = new AudioCache();
   static const login = "music/ready_check.mp3";
-  
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -97,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String abi = await rootBundle.loadString("assets/abi.json");
     String contractAddress = "0x99CF4c4CAE3bA61754Abd22A8de7e8c7ba3C196d";
 
-    final contract = DeployedContract(ContractAbi.fromJson(abi, "Thing"),
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "Mitica+Chain"),
         EthereumAddress.fromHex(contractAddress));
 
     return contract;
@@ -255,15 +254,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       //AppState.login;
                       player2.play(login);
                       Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login0Page()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Login0Page()));
                     },
                   )),
               Container(
                   child: Row(
                 children: <Widget>[
-                  Text('Does not have account?'),
+                  Text('Does not have account?',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   FlatButton(
                     textColor: Colors.white,
                     child: Text(
