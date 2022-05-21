@@ -1,3 +1,8 @@
+# INF1305 - TÓPICOS EM COMPUTACAO II
+
+"Nesta disciplina serão aprofundados debates e estudos sobre a aplicação Blockchain em projetos em diferentes segmentos. Serão exploradas diferentes alternativas de tecnologias DLTs. "
+
+---
 # thing
 
 A new Flutter project.
