@@ -1,8 +1,11 @@
 # INF1305 - TÓPICOS EM COMPUTACAO II (Blockchain)
+ INF1305 - TOP EM COMPUTACAO II - 2020.2
 
-Curso ministrada pelos rrofessores Gustavo obichez, Rafael Nasser e Ronnie Paskin, na graduação de Ciência da Computação na PUC-Rio.
+Curso ministrado pelos rrofessores Gustavo Robichez, Rafael Nasser e Ronnie Paskin, na graduação de Ciência da Computação na PUC-Rio.
+Construção de contratos inteligentes através do Solidity e do Metamask.
 
-"Nesta disciplina serão aprofundados debates e estudos sobre a aplicação Blockchain em projetos em diferentes segmentos. Serão exploradas diferentes alternativas de tecnologias DLTs. "
+"Nesta disciplina serão aprofundados debates e estudos sobre a aplicação Blockchain em projetos em diferentes segmentos. 
+Serão exploradas diferentes alternativas de tecnologias DLTs. "
 
 ---
 # thing
